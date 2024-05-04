@@ -1,0 +1,45 @@
+﻿@model UserRegistration.Models.LoginClass
+
+@{
+    ViewBag.Title = "Login";
+}
+<br />
+<h2>User Login</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Useremail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4"> <!--Changed field length col-md-10 to col-md-4-->
+                @Html.EditorFor(model => model.Useremail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Useremail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(model => model.Userpassword, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4"> <!--Changed field length col-md-10 to col-md-4-->
+                @Html.EditorFor(model => model.Userpassword, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Userpassword, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-4"> <!--Changed field length col-md-10 to col-md-4-->
+                <input type="submit" value="Login" class="btn btn-primary" style="border-color: #dee2e6;" /> <!--Changed btn-default to btn-primary-->
+            </div>
+            <br />
+            <h3>@Html.ViewData["Message"]</h3> <!--Message displayed when user account is not found-->
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

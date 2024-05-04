@@ -1,0 +1,158 @@
+﻿@{
+    ViewBag.Title = "Weather";
+}
+
+<style>
+    body {
+        background-image: url("../../Content/Images/23065.jpg");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+    }
+
+    h1 {
+        color: white;
+        font-size: 45px;
+        padding-top: 0;
+        padding-bottom: 2%;
+        text-align: center;
+        margin: auto;
+    }
+
+    table {
+        background-color: rgba(194, 214, 214, 0.8);
+        border-radius: 1em;
+        width: 35vw;
+        height: auto;
+        margin: auto;
+    }
+
+    #cityName {
+        border-radius: 0.5em;
+    }
+
+    td, th {
+        text-align: left;
+        padding: 8px;
+    }
+
+    form {
+        padding: 2%;
+        margin: auto;
+    }
+
+    #errorMessage {
+        color: white;
+    }
+</style>
+
+<body>
+    <br />
+    <h1>City Weather Forecast</h1>
+    <form>
+        <label for="cityName" style="color:white">Enter City Name:</label><br />
+        <input type="text" id="cityName" name="cityName" /><br /><br />
+        <button class="btn btn-light" id="Search-btn" type="button">Search Weather</button>
+    </form>
+
+    <!--Table is hidden until the search button is clicked-->
+    <div id="tableDiv" style="display:none">
+        <table>
+            <tr>
+                <th style="font-size:20px">Today's Weather:</th>
+                <th><img id="imgWeatherIconUrl" /></th>
+            </tr>
+            <tr>
+                <td><strong>City:</strong></td>
+                <td><span id="cityId"></span>&nbsp;(<span id="countryId"></span>)</td>
+            </tr>
+            <tr>
+                <td><strong>Description:</strong></td>
+                <td><label id="descriptionId"></label></td>
+            </tr>
+            <tr>
+                <td><strong>Humidity:</strong></td>
+                <td><label id="humidityId"></label></td>
+            </tr>
+            <tr>
+                <td><strong>Wind:</strong></td>
+                <td><label id="windId"></label></td>
+            </tr>
+            <tr>
+                <td><strong>Temperature:</strong></td>
+                <td><label id="tempId"></label></td>
+            </tr>
+            <tr>
+                <td><strong>Temperature (Min):</strong></td>
+                <td><label id="tempMinId"></label></td>
+            </tr>
+            <tr>
+                <td><strong>Temperature (Max):</strong></td>
+                <td><label id="tempMaxId"></label></td>
+            </tr>
+            <tr>
+                <td><strong>Sunrise:</strong></td>
+                <td><label id="sunriseId"></label></td>
+            </tr>
+            <tr>
+                <td><strong>Sunset:</strong></td>
+                <td><label id="sunsetId"></label></td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+<script>
+    // Function to output the weather data to the HTML table.
+    $(document).ready(function () {
+        // Execute after search button click.
+        $("#Search-btn").click(function () {
+            // Store the city name in a variable.
+            var cityname = $("#cityName").val();
+            // Check if the city name is not empty.
+            if (cityname.length > 0) {
+                $.ajax({
+                    // Retrieve the current weather conditions for the entered city name.
+                    url: "https://localhost:44348/Weather/WeatherDetail?City=" + cityname,
+                    type: "POST",
+                    success: function (weatherVmval) {
+                        var data = JSON.parse(weatherVmval);
+                        var sunrise = new Date(data.Sunrise * 1000); // Store the sunrise time in milliseconds.
+                        var sunset = new Date(data.Sunset * 1000); // Store the sunset time in milliseconds.
+                        // If the city name is returned with "Error", for when the searched city name does not exist.
+                        if (data.City == "Error") {
+                            // Display a pop-up window alert message.
+                            alert("The city name you entered was not found! Please enter a new city name.");
+                        } else { // If the city name is valid, output the weather data to the table.
+                            $("#tableDiv").toggle(true); // Display table.
+                            console.log(data);
+                            $("#cityId").html(data.City);
+                            $("#countryId").text(data.Country);
+                            $("#descriptionId").text(toSentenceCase(data.Description));
+                            $("#humidityId").text(data.Humidity + "%");
+                            $("#windId").text(data.Wind + " Km/h");
+                            $("#tempId").text(data.Temp + " C°");
+                            $("#tempMinId").text(data.TempMin + " C°");
+                            $("#tempMaxId").text(data.TempMax + " C°");
+                            $("#sunriseId").text(sunrise.toLocaleTimeString());  // Output the sunrise using locale time format.
+                            $("#sunsetId").text(sunset.toLocaleTimeString());  // Output the sunset using locale time format.
+                            $("#imgWeatherIconUrl").attr("src", "https://openweathermap.org/img/w/" + data.WeatherIcon + ".png"); // Displays the current weathers icon.
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+            else {
+                // Display a pop-up window alert message if no city name was entered.
+                alert("Please enter a city name!");
+            }
+        });
+    });
+
+    // Function used to change the weather details to sentence case.
+    function toSentenceCase(str) {
+        return str.toLowerCase().charAt(0).toUpperCase() + str.slice(1);
+    }
+</script>

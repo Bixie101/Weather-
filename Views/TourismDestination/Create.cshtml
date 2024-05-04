@@ -1,0 +1,82 @@
+﻿@model UserRegistration.Models.TourismDestination
+
+@{
+    ViewData["Title"] = "Create Tourism Destination";
+}
+<style>
+    body {
+        background-image: url("../../Content/Images/flowers_sunset_summer_nature_canon_vintage_suomi_finland-812759.jpg");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+    }
+
+    
+</style>
+
+<h1>Create Tourism Destination</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        @using (Html.BeginForm("create", "TourismDestination", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <!--Changed field length col-md-10 to col-md-4-->
+                        @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Country, "Please enter the Countrty data", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <!--Changed field length col-md-10 to col-md-4-->
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "Please enter the Name of tourism destinationdata", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <!--Changed field length col-md-10 to col-md-4-->
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "Please enter the Description data", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-4">
+                    <!--Changed field length col-md-10 to col-md-4-->
+                    <input type="submit" value="Submit" class="btn btn-primary" style="border-color: #dee2e6;" /> <!--Changed btn-default to btn-primary-->
+                </div>
+                <br />
+                <h3>@Html.ViewData["Message"]</h3> <!--Message after successful registration-->
+            </div>
+         }
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+
+
